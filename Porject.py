@@ -29,22 +29,29 @@ def Main_Menu():
         Main_Menu()
 #defines add_sample function
 
-def add_sample():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--dataset", required=True,
-    help="path to input directory of faces + images")
-    ap.add_argument("-e", "--encodings", required=True,
-	help="path to serialized db of facial encodings")
-    ap.add_argument("-d", "--detection-method", type=str, default="cnn",
-    help="face detection model to use: either `hog` or `cnn`")
-    args = vars(ap.parse_args())
-    knownEncodings = []
-    knownNames = []
-    ###ask user to locate images they wish to add to the program
+
+
+###ask user to locate images they wish to add to the program
     ###once found encode the image and add to the text file
     ###loop back to menu once completed, add option to add another file - repeate the menu
     ###user needs to locate the file  
-    imagePaths = input("Enter the name of the image")
+
+
+#may be worth adding the option to encode a new folder?? if time is left
+def add_sample():
+    #
+    ###used to find the file where the images are stored in, so instead of using args get the user to input the address of the picture,
+    ###like where it is stored ect
+    print("---Before continuing make sure the image you wish to add is placed in the same folder as the Program---")
+    ###here
+    #imagePaths = list(paths.list_images(args["dataset"]))
+
+    
+    
+    imagePath = input("Enter the name of the image (include ,png/.jpg)")
+    ##if the image is placed in the same folder as the python code, the user can just type the code in, if not then the user will neeed the address
+
+
     # extract the person name from the image path 
     # ##need to extract expression not name
     #might have to remove this part and get user to specifiy the expression dispalyed
@@ -57,21 +64,22 @@ def add_sample():
     # detect the (x, y)-coordinates of the bounding boxes
 	# corresponding to each face in the input image
     #####################need to understand what args does
-    boxes = face_recognition.face_locations(rgb, model=args["detection_method"])
+    ###nvm i uderstand now, replace args["detection_method"] with just "cnn" this is constant and removes the user input that is needed
+    #boxes = face_recognition.face_locations(rgb, model=args["detection_method"])
+    boxes =face_recognition.face_locations(rgb, model="cnn")
 
 	# compute the facial embedding for the face
-    encodings = face_recognition.face_encodings(rgb, boxes)
-    # loop over the encodings
-    for encoding in encodings:
-		# add each encoding + name to our set of known names and
-        ##where name is need to expression
-		# encodings
-        knownEncodings.append(encoding)
-        knownNames.append(name) 
+    encoding = face_recognition.face_encodings(rgb, boxes)
+
     # dump the facial encodings + names to disk
     print("[INFO] serializing encodings...")
-    data = {"encodings": knownEncodings, "names": knownNames}
-    f = open(args["encodings"], "wb")
+    #doesnt need the loops because only one image is added
+    data = {"encodings": encoding, "names": name}
+    ###similar to the model above can be used here, can be hard coded in
+    ####when opening need to append not write over the exisitg file, for example "ab", stille creates a new file if doesnt exist but append to the file 
+
+    f = open("encoded_images.pickle", "ab")
+    #f = open("encodings.pickle", "wb")
     f.write(pickle.dumps(data))
     f.close()   
     
