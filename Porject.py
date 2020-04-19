@@ -72,7 +72,6 @@ def add_sample():
     encoding = face_recognition.face_encodings(rgb, boxes)
 
     # dump the facial encodings + names to disk
-    print("[INFO] serializing encodings...")
     #doesnt need the loops because only one image is added
     data = {"encodings": encoding, "names": name}
     ###similar to the model above can be used here, can be hard coded in
@@ -86,17 +85,25 @@ def add_sample():
     Main_Menu()
 #defines live_capture function
 def live_capture():
+    try:
+        encoded_faces = open("encoded_images.pickle")
+    except:
+        print("ERROR no encoded images found")
+        Main_Menu()
+    collect_photo()
+    
+    
     ###add a check to see if the text file is present and has values
+
     print("live_capture")
-    encode_image()
+    
     print("returned")
     Main_Menu()
 
 #defines encoding function
-def encode_image():
-    #function should encode the images in the folder and add them to the text file
-    print("encodes images")
+def collect_photo():
     return
+
 
 
 Main_Menu()
