@@ -56,7 +56,7 @@ def add_sample():
     # ##need to extract expression not name
     #might have to remove this part and get user to specifiy the expression dispalyed
     #---name = imagePath.split(os.path.sep)[-2]
-    name=input("Enter displayed expression")
+    expression=input("Enter displayed expression")
     # load the input image and convert it from RGB (OpenCV ordering)
 	# to dlib ordering (RGB)
     image = cv2.imread(imagePath)
@@ -73,7 +73,7 @@ def add_sample():
 
     # dump the facial encodings + names to disk
     #doesnt need the loops because only one image is added
-    data = {"encodings": encoding, "names": name}
+    data = {"encodings": encoding, "expression": expression}
     ###similar to the model above can be used here, can be hard coded in
     ####when opening need to append not write over the exisitg file, for example "ab", stille creates a new file if doesnt exist but append to the file 
 
@@ -86,23 +86,45 @@ def add_sample():
 #defines live_capture function
 def live_capture():
     try:
-        encoded_faces = open("encoded_images.pickle")
+        encoded_faces = pickle.loads(open("encoded_images.pickle",, "rb").read())
     except:
         print("ERROR no encoded images found")
         Main_Menu()
-    collect_photo()
-    
-    
-    ###add a check to see if the text file is present and has values
+    live_image = collect_photo()
+    rgb = cv2.cvtColor(live_image, cv2.COLOR_BGR2RGB)
+    boxes = face_recognition.face_locations(rgb,model="cnn")
+    encodings = face_recognition.face_encodings(rgb, boxes)
+    #stores boolean true or false if a reconized face was found
+    #encoding when comparing faces may need to be broken into a loop, or might not
+    #for face in encoded_face["encoding"]:
 
-    print("live_capture")
-    
-    print("returned")
+       # matches = face_recognition.compare_faces(face, encodings)
+    matches =face_recongition.compare_faces(encoded_faces["encoding"], encodings)
+    expression="Unkown_expression"
+    expression_list=[]
+    ##adds a count to determine which face is reconised more
+    if True in matches
+        matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+        count={}
+        for i in matchedIDxs:
+            expression=data["expression"][i]
+            counts[expression] =counts.get(expression,0)+1
+        expression=max(counts, key=counts.get)
+    expression_list.append(name)
+    # draw the predicted face name on the image
+	cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)y = top - 15 if top - 15 > 15 else top + 15
+	cv2.putText(image, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
+    # show the output image
+    cv2.imshow("Image", image)
+    a=input("...")
     Main_Menu()
+
 
 #defines encoding function
 def collect_photo():
-    return
+    ##cv2 cv2.imread(args["image"])
+    #returns the imread images
+    return image
 
 
 
