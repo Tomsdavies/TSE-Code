@@ -39,58 +39,52 @@ def Main_Menu():
 
 #may be worth adding the option to encode a new folder?? if time is left
 def add_sample():
-    #
-    ###used to find the file where the images are stored in, so instead of using args get the user to input the address of the picture,
-    ###like where it is stored ect
+    #displays warning to user
     print("---Before continuing make sure the image you wish to add is placed in the same folder as the Program---")
-    ###here
-    #imagePaths = list(paths.list_images(args["dataset"]))
-
-    
-    
-    imagePath = input("Enter the name of the image (include ,png/.jpg)")
-    ##if the image is placed in the same folder as the python code, the user can just type the code in, if not then the user will neeed the address
-
-
-    # extract the person name from the image path 
-    # ##need to extract expression not name
-    #might have to remove this part and get user to specifiy the expression dispalyed
-    #---name = imagePath.split(os.path.sep)[-2]
+    #asks user for the image name so python can locate image    
+    image_name = input("Enter the name of the image (include ,png/.jpg)")
+    #asks user or the expression displayed in the image
     expression=input("Enter displayed expression")
+    #checks to see if user has entered correct or acceptable values
+    if(len(expression)<1):
+        print("Incorrect Entry, Please enter an expression...")
+        add_sample()
     # load the input image and convert it from RGB (OpenCV ordering)
 	# to dlib ordering (RGB)
-    image = cv2.imread(imagePath)
+    #try and except function to check if the image_name exists in the folder and can be encoded
+    try:
+        image = cv2.imread(image_name)
+    except:
+        Print("Image could not be found to encode, Please enter correct image name or check location")
+        add_sample()
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # detect the (x, y)-coordinates of the bounding boxes
 	# corresponding to each face in the input image
-    #####################need to understand what args does
-    ###nvm i uderstand now, replace args["detection_method"] with just "cnn" this is constant and removes the user input that is needed
-    #boxes = face_recognition.face_locations(rgb, model=args["detection_method"])
     boxes =face_recognition.face_locations(rgb, model="cnn")
-
 	# compute the facial embedding for the face
     encoding = face_recognition.face_encodings(rgb, boxes)
 
-    # dump the facial encodings + names to disk
-    #doesnt need the loops because only one image is added
+    # dump the facial encodings + expressions to disk
     data = {"encodings": encoding, "expression": expression}
-    ###similar to the model above can be used here, can be hard coded in
-    ####when opening need to append not write over the exisitg file, for example "ab", stille creates a new file if doesnt exist but append to the file 
-
+    #uses ab to append to existing files, not overwrite them
     f = open("encoded_images.pickle", "ab")
-    #f = open("encodings.pickle", "wb")
+    #write this data to the file
     f.write(pickle.dumps(data))
     f.close()   
-    
+    #once completed loops back to main menu
     Main_Menu()
 #defines live_capture function
 def live_capture():
+    #try catch to check a file exists that can be opened containing encoded images
     try:
-        encoded_faces = pickle.loads(open("encoded_images.pickle",, "rb").read())
+        encoded_faces = pickle.loads(open("encoded_images.pickle","rb").read())
     except:
+        #tells the user a file can not be found
         print("ERROR no encoded images found")
         Main_Menu()
+    #calls the function to collect images needed to be processed, function returns an image ready for comparison
     live_image = collect_photo()
+    #begins comparison
     rgb = cv2.cvtColor(live_image, cv2.COLOR_BGR2RGB)
     boxes = face_recognition.face_locations(rgb,model="cnn")
     encodings = face_recognition.face_encodings(rgb, boxes)
@@ -100,10 +94,11 @@ def live_capture():
 
        # matches = face_recognition.compare_faces(face, encodings)
     matches =face_recongition.compare_faces(encoded_faces["encoding"], encodings)
+    #defines future variables
     expression="Unkown_expression"
     expression_list=[]
-    ##adds a count to determine which face is reconised more
-    if True in matches
+    #adds a count to determine which face is reconised more
+    if True in matches:
         matchedIdxs = [i for (i, b) in enumerate(matches) if b]
         count={}
         for i in matchedIDxs:
@@ -112,11 +107,13 @@ def live_capture():
         expression=max(counts, key=counts.get)
     expression_list.append(name)
     # draw the predicted face name on the image
-	cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)y = top - 15 if top - 15 > 15 else top + 15
-	cv2.putText(image, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
+    cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)
+    y = top - 15 if top - 15 > 15 else top + 15
+    cv2.putText(image, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
     # show the output image
     cv2.imshow("Image", image)
     a=input("...")
+    #either waits for user responce or can be changed to repeate every so many seconds creating a live update and constant reconizing
     Main_Menu()
 
 
@@ -124,7 +121,7 @@ def live_capture():
 def collect_photo():
     ##cv2 cv2.imread(args["image"])
     #returns the imread images
-    return image
+    return
 
 
 
