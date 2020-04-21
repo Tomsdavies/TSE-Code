@@ -107,7 +107,7 @@ def collect_photo():
     #where the code for the intergration for the webcam would be placed, future expandability
     #asks the user for the name of the image to compare
     while(True):
-            user_photo_name=input("Enter the name of the image you wish to compare:")
+        user_photo_name=input("Enter the name of the image you wish to compare:")
         try:
             user_photo_name=cv2.imread(user_photo_name)
             return user_photo_name
