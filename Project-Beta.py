@@ -79,30 +79,34 @@ def live_capture():
     rgb = cv2.cvtColor(live_image, cv2.COLOR_BGR2RGB)
     boxes = face_recognition.face_locations(rgb,model="cnn")
     encodings = face_recognition.face_encodings(rgb, boxes)
-    #stores boolean true or false if a reconized face was found
-    
-    #encodings is a list
-    matches =face_recognition.compare_faces(encoded_faces["encodings"], encodings[0])
-    #defines future variables
-    expression="Unkown_expression"
+    #list to hold the different expressions 
     expression_list=[]
-    #adds a count to determine which face is reconised more
-    if True in matches:
-        matchedIDxs = [i for (i, b) in enumerate(matches) if b]
-        counts={}
-        for i in matchedIDxs:
-            expression=encoded_faces["expression"][i]
-            counts[expression] =counts.get(expression,0)+1
-        expression=max(counts, key=counts.get)
-    expression_list.append(expression)
+    #loop to loop throught the different faces in the file using face as a place holder
+    
+    for face in encodings:
+        #encodings is a list
+        matches =face_recognition.compare_faces(encoded_faces["encodings"], face)
+        #defines future variables
+        expression="Unkown_expression"
+        
+        #adds a count to determine which face is reconised more
+        if True in matches:
+            print("Match Found")
+            matchedIDxs = [i for (i, b) in enumerate(matches) if b]
+            counts={}
+            for i in matchedIDxs:
+                expression=encoded_faces["expression"][i]
+                counts[expression] =counts.get(expression,0)+1
+            expression=max(counts, key=counts.get)
+        expression_list.append(expression)
     # draw the predicted face name on the image
-    for ((top, right, bottom, left), expression) in zip(boxes, expression):
+    for ((top, right, bottom, left), expression) in zip(boxes, expression_list):
         cv2.rectangle(live_image, (left, top), (right, bottom), (0, 255, 0), 2)
         y = top - 15 if top - 15 > 15 else top + 15
         cv2.putText(live_image, expression, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
     # show the output image
     cv2.imshow("Image", live_image)
-    a=input("...")
+    cv2.waitKey(0)
     #either waits for user responce or can be changed to repeate every so many seconds creating a live update and constant reconizing
     Main_Menu()
 
