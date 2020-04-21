@@ -22,6 +22,7 @@ def Main_Menu():
         live_capture()
     elif(user_option=="C"or user_option=="c"):
         print("Program Quitting")
+        exit()
     else:
         #if user makes a selection not known by the program, user is prompted to try again
         print("Unknown Selection, Try Again")
@@ -44,7 +45,7 @@ def add_sample():
     try:
         image = cv2.imread(image_name)
     except:
-        Print("Image could not be found to encode, Please enter correct image name or check location")
+        print("Image could not be found to encode, Please enter correct image name or check location")
         add_sample()
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     # detect the (x, y)-coordinates of the bounding boxes
@@ -77,25 +78,28 @@ def live_capture():
     boxes = face_recognition.face_locations(rgb,model="cnn")
     encodings = face_recognition.face_encodings(rgb, boxes)
     #stores boolean true or false if a reconized face was found
-    matches =face_recongition.compare_faces(encoded_faces["encoding"], encodings)
+    
+    #encodings is a list
+    matches =face_recognition.compare_faces(encoded_faces["encodings"], encodings[0])
     #defines future variables
     expression="Unkown_expression"
     expression_list=[]
     #adds a count to determine which face is reconised more
     if True in matches:
-        matchedIdxs = [i for (i, b) in enumerate(matches) if b]
-        count={}
+        matchedIDxs = [i for (i, b) in enumerate(matches) if b]
+        counts={}
         for i in matchedIDxs:
-            expression=data["expression"][i]
+            expression=encoded_faces["expression"][i]
             counts[expression] =counts.get(expression,0)+1
         expression=max(counts, key=counts.get)
-    expression_list.append(name)
+    expression_list.append(expression)
     # draw the predicted face name on the image
-    cv2.rectangle(image, (left, top), (right, bottom), (0, 255, 0), 2)
-    y = top - 15 if top - 15 > 15 else top + 15
-    cv2.putText(image, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
-    # show the output image
-    cv2.imshow("Image", image)
+    for ((top, right, bottom, left), expression) in zip(boxes, expression):
+        cv2.rectangle(live_image, (left, top), (right, bottom), (0, 255, 0), 2)
+        y = top - 15 if top - 15 > 15 else top + 15
+        cv2.putText(live_image, expression, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
+        # show the output image
+        cv2.imshow("Image", live_image)
     a=input("...")
     #either waits for user responce or can be changed to repeate every so many seconds creating a live update and constant reconizing
     Main_Menu()
