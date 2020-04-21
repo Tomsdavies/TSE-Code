@@ -34,7 +34,9 @@ def add_sample():
     #asks user for the image name so python can locate image    
     image_name = input("Enter the name of the image (include ,png/.jpg)")
     #asks user or the expression displayed in the image
-    expression=input("Enter displayed expression")
+    expression_user=input("Enter displayed expression")
+    expression=[]
+    expression.append(expression_user)
     #checks to see if user has entered correct or acceptable values
     if(len(expression)<1):
         print("Incorrect Entry, Please enter an expression...")
@@ -98,8 +100,8 @@ def live_capture():
         cv2.rectangle(live_image, (left, top), (right, bottom), (0, 255, 0), 2)
         y = top - 15 if top - 15 > 15 else top + 15
         cv2.putText(live_image, expression, (left, y), cv2.FONT_HERSHEY_SIMPLEX,0.75, (0, 255, 0), 2)
-        # show the output image
-        cv2.imshow("Image", live_image)
+    # show the output image
+    cv2.imshow("Image", live_image)
     a=input("...")
     #either waits for user responce or can be changed to repeate every so many seconds creating a live update and constant reconizing
     Main_Menu()
