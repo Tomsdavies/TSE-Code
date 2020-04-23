@@ -1,3 +1,8 @@
+#----------------------#
+#THINGS TO TALK ABOUT IN REPORT, FIXED ISSUES WHERE ADDING MUTILPLE IMAGES AT ONCE WOULD CAUSE SECOND IMAGES TO BE UNRECONISED
+#ADDED OPTION TO MENU FOR BUG REPORTING
+#BUG REPORT FILE IS SAVED IN SAME LOCATION AS PYTHON
+#THE ABILITY TO ADD MUTILPLE IAMGES AT ONCE IN A FILE ADDED
 import sys
 from imutils import paths
 import face_recognition
@@ -68,7 +73,7 @@ def add_sample():
             encodings.append(encoding[0])
         elif (user_choice=="B"or user_choice=="b"):
             #asks the user for the address of the file on the system
-            path=input("Please enter the location of the file, e.g. C:\home...")
+            path=input("Please enter the name of the Folder: ")
             #asks the user the common expression shown in the file
             Name_of_file=input("Please enter the expression of the images within the file")
             #for loop to loop through the different images in the file
