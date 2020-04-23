@@ -51,11 +51,12 @@ def add_sample():
             image_name = input("Enter the name of the image (include ,png/.jpg) ")
             #asks user or the expression displayed in the image
             expression_user=input("Enter displayed expression ")
-            expression.append(expression_user)
+            
             #checks to see if user has entered correct or acceptable values
-            if(len(expression)<1):
+            if(len(expression_user)<1):
                 print("Incorrect Entry, Please enter an expression...")
                 add_sample()
+            expression.append(expression_user)
             # load the input image and convert it from RGB (OpenCV ordering)
 	        # to dlib ordering (RGB)
             #try and except function to check if the image_name exists in the folder and can be encoded
@@ -79,11 +80,12 @@ def add_sample():
             #for loop to loop through the different images in the file
             for image_in_file in os.listdir(path):
                 image_in_file = os.path.join(path, image_in_file)
-                expression.append(Name_of_file)
+                
                 #checks to see if user has entered correct or acceptable values
-                if(len(expression)<1):
+                if(len(Name_of_file)<1):
                     print("Incorrect Entry, Please enter an expression...")
                     add_sample()
+                expression.append(Name_of_file)
                 # load the input image and convert it from RGB (OpenCV ordering)
 	            # to dlib ordering (RGB)
                 #try and except function to check if the image_name exists in the folder and can be encoded
