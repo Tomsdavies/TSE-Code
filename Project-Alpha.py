@@ -1,7 +1,3 @@
-
-
-
-
 import sys
 from imutils import paths
 import face_recognition
@@ -36,9 +32,10 @@ def Main_Menu():
         Main_Menu()
 #defines add_sample function
 def add_sample():
+    #defiens variables used in the following code, 2 lists
     expression=[] 
     encodings=[] 
-    ###needs to write as one file i think, ask user if they wish to add another and write at the end
+    #while loop until the user has entered all the images they want, then the program writes the images to a file
     while(True):
         #displays warning to user
         print("---Before continuing make sure the image you wish to add is placed in the same folder as the Program---")
@@ -128,8 +125,7 @@ def live_capture():
     encodings = face_recognition.face_encodings(rgb, boxes)
     #list to hold the different expressions 
     expression_list=[]
-    #loop to loop throught the different faces in the file using face as a place holder
-    
+    #loop to loop throught the different faces in the file using face as a place holder  
     for face in encodings:
         #encodings is a list
         matches =face_recognition.compare_faces(encoded_faces["encodings"], face)
@@ -156,8 +152,6 @@ def live_capture():
     cv2.waitKey(0)
     #either waits for user responce or can be changed to repeate every so many seconds creating a live update and constant reconizing
     Main_Menu()
-
-
 #defines encoding function
 def collect_photo():
     ##cv2 cv2.imread(args["image"])]
@@ -186,9 +180,6 @@ def report_bug():
     #displays closing message to user before looping them back to main menu
     print("Thankyou for your report, one of our staff will look into it")
     Main_Menu()        
-
-
-
 Main_Menu()
 
 
