@@ -42,6 +42,7 @@ def add_sample():
     while(True):
         #displays warning to user
         print("---Before continuing make sure the image you wish to add is placed in the same folder as the Program---")
+        #asks the user if they want to input a file or one image
         user_choice=input("A) encode single image B) encode a file")
         if (user_choice=="A"or user_choice=="a"):
             #asks user for the image name so python can locate image    
@@ -69,8 +70,11 @@ def add_sample():
             encoding = face_recognition.face_encodings(rgb, boxes)
             encodings.append(encoding[0])
         elif (user_choice=="B"or user_choice=="b"):
+            #asks the user for the address of the file on the system
             path=input("Please enter the location of the file, e.g. C:\home...")
+            #asks the user the common expression shown in the file
             Name_of_file=input("Please enter the expression of the images within the file")
+            #for loop to loop through the different images in the file
             for image_in_file in os.listdir(path):
                 image_in_file = os.path.join(path, image_in_file)
                 expression.append(Name_of_file)
@@ -95,7 +99,6 @@ def add_sample():
                 # dump the facial encodings + expressions to disk
             for i in encoding:
                 encodings.append(i)
-            data = {"encodings": encodings, "expression": Name_of_file}
         inputer=input("Would you like to add another?Y/N ")
         if inputer=="N":
             break
